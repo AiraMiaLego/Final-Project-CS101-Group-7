@@ -363,11 +363,11 @@ treviews_sub <- as.data.frame(treviews[1:10])
 
 
 textrev<- treviews_sub
-textrev
+
 
 split_df <- strsplit((textrev[,1]),"|", fixed = TRUE)
 split_df <- data.frame(do.call(rbind,split_df))
-split_df
+
 
 ver1<-as.data.frame(split_df$X1)
 reviews1<-as.data.frame(split_df$X2)
@@ -392,11 +392,11 @@ for (i in 2:30) {
   treviews_sub2 <- as.data.frame(treviews2[1:10])
   
   textrev2<- treviews_sub2
-  textrev2
+
   
   split_df <- strsplit((textrev2[,1]),"|", fixed = TRUE)
   split_df <- data.frame(do.call(rbind,split_df))
-  split_df
+
   r1<-split_df
   ver2[i]<-as.data.frame(split_df$X1)
   reviews2[i]<-as.data.frame(split_df$X2)
@@ -431,14 +431,13 @@ for (i in 2:30){
 r2<-cbind(resver,resreview)
 colnames(split_df)<-c("Verifications","Reviews")
 part6<-rbind(split_df,r2)
-part6
 finaloutput<-cbind(part3,part4,part5,part6)
 colnames(finaloutput)<-c("name","country","date","typeoftraveller","seattype","route","dateflown","recommended","title","verification","review")
 #---------------------------------------------------------------------
 summary(finaloutput)
 library(ggplot2)
 ggplot(finaloutput, aes(x =name, y = country),colors=class) + geom_point()
-
+# Malaysia has the most number of passengers that review the Airasia.
 library(ggplot2)
 
 library(dplyr)
@@ -457,9 +456,17 @@ ggplot(groupofcountry, aes(x = country, y = count, fill = country)) +
   scale_fill_hue()+ guides(fill=FALSE)
 
 recommendedfactor<-factor(finaloutput$recommended)
-
-plot(recommendedfactor,col=c("red","green"))
+barcolors <- c("red", "green")
+plot(recommendedfactor,col=c(barcolors),main="Passenger Recommendations for Air Asia",xlab = "Recommendation", ylab = "Number of Reviews")
+legend("topright", legend = levels(recommendedfactor), fill = barcolors)  
 recommendedfactor
+#Passenger's recommendation reviews to Air Asia Airline. Most passengers prefer/voted to not recommend the airline.
+
+verfactor<-factor(finaloutput$verification)
+barcolors <- c("violet", "pink")
+plot(verfactor,col=c(barcolors),main="Passenger Verification for Air Asia",xlab = "Verification", ylab = "Number of Verification")
+legend("topright", legend = levels(verfactor), fill = barcolors)  
+#Passenger's verification reviews to Air Asia Airline. Most passengers are verified.
 
 #--------------------------------------------------------
 library(dplyr)
@@ -473,6 +480,8 @@ colors <- c("maroon", "pink", "skyblue", "purple")
 
 pie(groupoftraveller$count, labels = groupoftraveller$count, col = colors, main = "Traveller Types Distribution on Air Asia")
 legend(x = 1.2, y = 1.2,cex = 0.8, legend = groupoftraveller$typeoftraveller, fill = colors, title = "Type of Travellers")
+
+#The analysis of passenger data for Air Asia reveals a diverse distribution of traveler types, with 30 business travelers, 70 couples on leisure trips, 86 family leisure , and 114 solo leisure travelers.
 
 #--------------------------------------------------------
 library(wordcloud)
@@ -494,7 +503,7 @@ pal<- pal[-(1:3)]
 
 set.seed(1234)
 wordcloud(words = reviewCorpus, min.freq = 1, scale = c(2, 0.2), max.words = 100, random.order = FALSE, rot.per = 0.35, colors = pal)
-
+#The most word that has been spotted in the comment reviewsis the word flight followed by the airasia,service,refund,airline,time,get,flights, and customer.
 #-----------------------------------------------------
 
 library(syuzhet)
@@ -518,7 +527,7 @@ df <- head(reviewsen, n = 10)
 class(reviewsen)
 
 sentiment_counts <- table(reviewsen$sentiment)
-sentiment_counts
+
 
 ggplot(reviewsen, aes(x = sentiment, fill = sentiment)) +
 geom_bar() +
@@ -537,5 +546,23 @@ geom_bar() +
                                "5) very positive" = "darkgreen")) +
   scale_y_continuous(breaks = seq(0, 150, 25)) +
   theme_minimal()
+#There are more very positive sentiments with the number of 136 found in AirAsia followed by the very negative=107,negative=37,positive=18,neutral=2.
 
-#----------------------------------------------------------------------------
+#---------------------------------------
+library(ggplot2)
+library(viridis)
+
+ggplot(data = finaloutput, aes(x = date)) +
+  geom_bar(aes(fill = ..count..), stat = "count") +
+  theme(legend.position = "none") +
+  xlab("Date") + ylab("Number of Reviews") +
+  scale_fill_viridis_c()
+
+md<-max(dateof$count)
+subset(dateof,count==md)
+subset(dateof,count==4)
+subset(dateof,count==3)
+subset(dateof,count==2)
+subset(dateof,count==1)
+
+#The maximum number of the number of reviews per date is in the date of September 26, 2023 that has 6 reviews, followed by 4 reviews in date of February 18,2020, 5counts of 3 reviews per date,30counts of 2 reviews per date, and 215counts per 1 review per date in the remaining dates. 
